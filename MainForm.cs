@@ -21,22 +21,48 @@ namespace SqlFileClient
 		private string lastDirectory = "C:\\Temp";
 		private void btnBrowse_Click(object sender, EventArgs e)
 		{
-			using (SaveFileDialog saveDialog = new SaveFileDialog())
+			using (FolderBrowserDialog browseDialog = new FolderBrowserDialog())
 			{
-				saveDialog.CheckFileExists = false;
-				saveDialog.CheckPathExists = true;
-				saveDialog.InitialDirectory = lastDirectory;
-				if (saveDialog.ShowDialog() == DialogResult.OK)
+				browseDialog.ShowNewFolderButton = true;
+				browseDialog.SelectedPath = lastDirectory;
+				if (browseDialog.ShowDialog() == DialogResult.OK)
 				{
-					tbFilename.Text = saveDialog.FileName;
-					lastDirectory = Path.GetFullPath(saveDialog.FileName);
+					tbFolderPath.Text = browseDialog.SelectedPath;
+					lastDirectory = browseDialog.SelectedPath;
 				}
 			}
 		}
 
+		private void chkBoxNameFromColumn_CheckedChanged(object sender, EventArgs e)
+		{
+			bool enabled = chkBoxNameFromColumn.Checked;
+			radioBtnName1.Enabled = enabled;
+			radioBtnName2.Enabled = enabled;
+			radioBtnName3.Enabled = enabled;
+		}
+
 		private void btnExecuteQuery_Click(object sender, EventArgs e)
 		{
-			string outFilename = tbFilename.Text;
+			ExecuteQuery();
+		}
+
+		private void textbox_KeyUp(object sender, KeyEventArgs e)
+		{
+			TextBox eventTextBox = (TextBox)sender;
+
+			if (e.Control && e.KeyCode == Keys.A)
+			{
+				eventTextBox.SelectAll();
+			}
+			else if (e.KeyCode == Keys.F5 && btnExecuteQuery.Enabled)
+			{
+				ExecuteQuery();
+			}
+		}
+
+		private void ExecuteQuery()
+		{
+			string outFilename = tbFolderPath.Text;
 			string connectionString = tbConnectionString.Text;
 			string commandText = tbCommandText.Text;
 
@@ -60,23 +86,6 @@ namespace SqlFileClient
 			tbOutput.Text = result;
 
 			btnExecuteQuery.Enabled = true;
-
-		}
-
-		private void chkBoxNameFromColumn_CheckedChanged(object sender, EventArgs e)
-		{
-			if (chkBoxNameFromColumn.Checked == true)
-			{
-				radioBtnName1.Enabled = true;
-				radioBtnName2.Enabled = true;
-				radioBtnName3.Enabled = true;
-			}
-			else
-			{
-				radioBtnName1.Enabled = false;
-				radioBtnName2.Enabled = false;
-				radioBtnName3.Enabled = false;
-			}
 		}
 	}
 }
