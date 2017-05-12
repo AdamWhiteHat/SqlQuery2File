@@ -40,9 +40,43 @@ namespace SqlFileClient
 			string connectionString = tbConnectionString.Text;
 			string commandText = tbCommandText.Text;
 
-			string result = SqlQuery2File.GetSqlFile(connectionString, commandText, outFilename);
+			int passValue = -1;
+			if (radioBtnName1.Checked == true)
+			{
+				passValue = 0;
+			}
+			else if (radioBtnName2.Checked == true)
+			{
+				passValue = 1;
+			}
+			else if (radioBtnName3.Checked == true)
+			{
+				passValue = 2;
+			}
 
+			btnExecuteQuery.Enabled = false;
+
+			string result = SqlQuery2File.GetSqlFile(connectionString, commandText, outFilename, chkBoxNameFromColumn.Checked, passValue);
 			tbOutput.Text = result;
+
+			btnExecuteQuery.Enabled = true;
+
+		}
+
+		private void chkBoxNameFromColumn_CheckedChanged(object sender, EventArgs e)
+		{
+			if (chkBoxNameFromColumn.Checked == true)
+			{
+				radioBtnName1.Enabled = true;
+				radioBtnName2.Enabled = true;
+				radioBtnName3.Enabled = true;
+			}
+			else
+			{
+				radioBtnName1.Enabled = false;
+				radioBtnName2.Enabled = false;
+				radioBtnName3.Enabled = false;
+			}
 		}
 	}
 }

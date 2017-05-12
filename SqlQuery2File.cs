@@ -11,7 +11,34 @@ namespace SqlFileClient
 {
 	public static class SqlQuery2File
 	{
-		public static string GetSqlFile(string connectionString, string commandText, string outDirectory)
+		public static string GenerateFilename(string myFileName, int appendName, bool boolConflict)
+		{
+			if (myFileName.Contains("/"))
+			{
+				myFileName = myFileName.Substring(myFileName.LastIndexOf("/") + 1);
+			}
+
+			string returnName = "";
+			if (appendName == 1)
+			{
+				returnName = System.Guid.NewGuid().ToString() + "_" + myFileName;
+			}
+			else if (appendName == -1)
+			{
+				returnName = System.Guid.NewGuid().ToString();
+			}
+			else if (appendName == 2 && boolConflict == false)
+			{
+				returnName = myFileName;
+			}
+			else
+			{
+				returnName = myFileName + "_" + System.Guid.NewGuid().ToString();
+			}
+			return returnName;
+		}
+
+		public static string GetSqlFile(string connectionString, string commandText, string outDirectory, bool useColumnValueForName, int appendName)
 		{
 			SqlConnection sqlConnection = null;
 
@@ -22,25 +49,43 @@ namespace SqlFileClient
 				SqlCommand sqlCommand = new SqlCommand();
 				sqlCommand.Connection = sqlConnection;
 				sqlCommand.CommandText = commandText;
+				sqlCommand.CommandTimeout = 0;
 				sqlConnection.Open();
 
-				FileStream fs;                          // Writes the BLOB to a file (*.bmp).
-				BinaryWriter bw;                        // Streams the BLOB to the FileStream object.
+				FileStream fs;
+				BinaryWriter bw;
 
-				int bufferSize = 2000;                // Size of the BLOB buffer.
-				byte[] outbyte = new byte[bufferSize];  // The BLOB byte[] buffer to be filled by GetBytes.
-				long retval;                            // The bytes returned from GetBytes.
-				long startIndex = 0;                    // The starting position in the BLOB output.
+				int bufferSize = 2000;
+				byte[] outbyte = new byte[bufferSize];
+				long retval;
+				long startIndex = 0;
 
-				string pub_id = "";                     // The publisher id to use in the file name.
 
 				SqlDataReader reader = sqlCommand.ExecuteReader(CommandBehavior.SequentialAccess);
 				while (reader.Read())
 				{
-					// Get the publisher id, which must occur before getting the logo.
+					string fName = "";
+					// Get filename
+					if (useColumnValueForName)
+					{
+						object tmpFname = reader.GetValue(0);
+						fName = tmpFname.ToString();
+						if (fName.Length > 200)
+						{
+							fName = "";
+						}
+					}
 
-					// Create a file to hold the output.
-					fs = new FileStream(Path.Combine(outDirectory, Path.GetFileName(Path.GetTempFileName())), FileMode.OpenOrCreate, FileAccess.Write);
+					// Get output path
+					string fPath = Path.Combine(outDirectory, GenerateFilename(fName, appendName, false));
+					// while exists
+					while (File.Exists(fPath) == true)
+					{
+						fPath = Path.Combine(outDirectory, GenerateFilename(fName, appendName, true));
+					}
+
+					// Create a file to write the output to
+					fs = new FileStream(fPath, FileMode.OpenOrCreate, FileAccess.Write);
 					bw = new BinaryWriter(fs);
 
 					// Reset the starting byte for the new BLOB.
