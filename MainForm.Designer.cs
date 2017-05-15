@@ -28,102 +28,27 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.tbConnectionString = new System.Windows.Forms.TextBox();
-			this.tbCommandText = new System.Windows.Forms.TextBox();
-			this.tbFolderPath = new System.Windows.Forms.TextBox();
-			this.btnBrowse = new System.Windows.Forms.Button();
-			this.label1 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
 			this.btnExecuteQuery = new System.Windows.Forms.Button();
 			this.tbOutput = new System.Windows.Forms.TextBox();
-			this.chkBoxNameFromColumn = new System.Windows.Forms.CheckBox();
-			this.radioBtnName1 = new System.Windows.Forms.RadioButton();
-			this.radioBtnName2 = new System.Windows.Forms.RadioButton();
-			this.radioBtnName3 = new System.Windows.Forms.RadioButton();
 			this.label4 = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
+			this.tbCommandText = new System.Windows.Forms.TextBox();
+			this.tbConnectionString = new System.Windows.Forms.TextBox();
+			this.label1 = new System.Windows.Forms.Label();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.tbFilepathMask = new System.Windows.Forms.TextBox();
+			this.label3 = new System.Windows.Forms.Label();
+			this.tbVarBinaryColumn = new System.Windows.Forms.TextBox();
+			this.label6 = new System.Windows.Forms.Label();
+			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.groupBox1.SuspendLayout();
+			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// tbConnectionString
-			// 
-			this.tbConnectionString.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbConnectionString.Location = new System.Drawing.Point(16, 20);
-			this.tbConnectionString.Multiline = true;
-			this.tbConnectionString.Name = "tbConnectionString";
-			this.tbConnectionString.Size = new System.Drawing.Size(648, 40);
-			this.tbConnectionString.TabIndex = 0;
-			this.tbConnectionString.Text = "Integrated Security=true;server=(local)";
-			this.tbConnectionString.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
-			// 
-			// tbCommandText
-			// 
-			this.tbCommandText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbCommandText.Location = new System.Drawing.Point(16, 80);
-			this.tbCommandText.Multiline = true;
-			this.tbCommandText.Name = "tbCommandText";
-			this.tbCommandText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbCommandText.Size = new System.Drawing.Size(648, 96);
-			this.tbCommandText.TabIndex = 1;
-			this.tbCommandText.Text = "SELECT FilePath, FileValue FROM Archive.dbo.Records WHERE SerialNumber = 3";
-			this.tbCommandText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
-			// 
-			// tbFolderPath
-			// 
-			this.tbFolderPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbFolderPath.Location = new System.Drawing.Point(16, 196);
-			this.tbFolderPath.Name = "tbFolderPath";
-			this.tbFolderPath.Size = new System.Drawing.Size(572, 20);
-			this.tbFolderPath.TabIndex = 2;
-			this.tbFolderPath.Text = "C:\\Temp\\";
-			this.tbFolderPath.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
-			// 
-			// btnBrowse
-			// 
-			this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnBrowse.Location = new System.Drawing.Point(592, 192);
-			this.btnBrowse.Name = "btnBrowse";
-			this.btnBrowse.Size = new System.Drawing.Size(75, 28);
-			this.btnBrowse.TabIndex = 3;
-			this.btnBrowse.Text = "Browse...";
-			this.btnBrowse.UseVisualStyleBackColor = true;
-			this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(4, 4);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(91, 13);
-			this.label1.TabIndex = 4;
-			this.label1.Text = "ConnectionString:";
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(4, 64);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(77, 13);
-			this.label2.TabIndex = 5;
-			this.label2.Text = "Command text:";
-			// 
-			// label3
-			// 
-			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(4, 180);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(71, 13);
-			this.label3.TabIndex = 6;
-			this.label3.Text = "Output folder:";
 			// 
 			// btnExecuteQuery
 			// 
-			this.btnExecuteQuery.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.btnExecuteQuery.Location = new System.Drawing.Point(252, 260);
+			this.btnExecuteQuery.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.btnExecuteQuery.Location = new System.Drawing.Point(240, 316);
 			this.btnExecuteQuery.Name = "btnExecuteQuery";
 			this.btnExecuteQuery.Size = new System.Drawing.Size(163, 40);
 			this.btnExecuteQuery.TabIndex = 14;
@@ -135,118 +60,191 @@
 			// 
 			this.tbOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbOutput.Location = new System.Drawing.Point(4, 324);
+			this.tbOutput.Location = new System.Drawing.Point(4, 364);
 			this.tbOutput.Multiline = true;
 			this.tbOutput.Name = "tbOutput";
 			this.tbOutput.ReadOnly = true;
 			this.tbOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbOutput.Size = new System.Drawing.Size(664, 148);
+			this.tbOutput.Size = new System.Drawing.Size(664, 108);
 			this.tbOutput.TabIndex = 8;
 			this.tbOutput.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
-			// 
-			// chkBoxNameFromColumn
-			// 
-			this.chkBoxNameFromColumn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.chkBoxNameFromColumn.AutoSize = true;
-			this.chkBoxNameFromColumn.Location = new System.Drawing.Point(24, 220);
-			this.chkBoxNameFromColumn.Name = "chkBoxNameFromColumn";
-			this.chkBoxNameFromColumn.Size = new System.Drawing.Size(338, 17);
-			this.chkBoxNameFromColumn.TabIndex = 9;
-			this.chkBoxNameFromColumn.Text = "Use first column value in file name (only if output to a folder above)";
-			this.chkBoxNameFromColumn.UseVisualStyleBackColor = true;
-			this.chkBoxNameFromColumn.CheckedChanged += new System.EventHandler(this.chkBoxNameFromColumn_CheckedChanged);
-			// 
-			// radioBtnName1
-			// 
-			this.radioBtnName1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.radioBtnName1.AutoSize = true;
-			this.radioBtnName1.Checked = true;
-			this.radioBtnName1.Enabled = false;
-			this.radioBtnName1.Location = new System.Drawing.Point(52, 244);
-			this.radioBtnName1.Name = "radioBtnName1";
-			this.radioBtnName1.Size = new System.Drawing.Size(65, 17);
-			this.radioBtnName1.TabIndex = 11;
-			this.radioBtnName1.TabStop = true;
-			this.radioBtnName1.Text = "Prepend";
-			this.radioBtnName1.UseVisualStyleBackColor = true;
-			// 
-			// radioBtnName2
-			// 
-			this.radioBtnName2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.radioBtnName2.AutoSize = true;
-			this.radioBtnName2.Enabled = false;
-			this.radioBtnName2.Location = new System.Drawing.Point(52, 264);
-			this.radioBtnName2.Name = "radioBtnName2";
-			this.radioBtnName2.Size = new System.Drawing.Size(62, 17);
-			this.radioBtnName2.TabIndex = 12;
-			this.radioBtnName2.Text = "Append";
-			this.radioBtnName2.UseVisualStyleBackColor = true;
-			// 
-			// radioBtnName3
-			// 
-			this.radioBtnName3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.radioBtnName3.AutoSize = true;
-			this.radioBtnName3.Enabled = false;
-			this.radioBtnName3.Location = new System.Drawing.Point(52, 284);
-			this.radioBtnName3.Name = "radioBtnName3";
-			this.radioBtnName3.Size = new System.Drawing.Size(65, 17);
-			this.radioBtnName3.TabIndex = 13;
-			this.radioBtnName3.Text = "Replace";
-			this.radioBtnName3.UseVisualStyleBackColor = true;
 			// 
 			// label4
 			// 
 			this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(4, 308);
+			this.label4.Location = new System.Drawing.Point(4, 348);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(42, 13);
 			this.label4.TabIndex = 15;
 			this.label4.Text = "Output:";
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label2.Location = new System.Drawing.Point(12, 84);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(77, 13);
+			this.label2.TabIndex = 5;
+			this.label2.Text = "Command text:";
+			// 
+			// tbCommandText
+			// 
+			this.tbCommandText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbCommandText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.tbCommandText.Location = new System.Drawing.Point(24, 100);
+			this.tbCommandText.Multiline = true;
+			this.tbCommandText.Name = "tbCommandText";
+			this.tbCommandText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.tbCommandText.Size = new System.Drawing.Size(636, 80);
+			this.tbCommandText.TabIndex = 1;
+			this.tbCommandText.Text = "SELECT [FileType], [FileName], [FileData], [FileExt]\r\nFROM [FileTable]\r\nWHERE [Fi" +
+    "leData] IS NOT NULL";
+			this.tbCommandText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
+			// 
+			// tbConnectionString
+			// 
+			this.tbConnectionString.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbConnectionString.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.tbConnectionString.Location = new System.Drawing.Point(24, 40);
+			this.tbConnectionString.Multiline = true;
+			this.tbConnectionString.Name = "tbConnectionString";
+			this.tbConnectionString.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.tbConnectionString.Size = new System.Drawing.Size(636, 40);
+			this.tbConnectionString.TabIndex = 0;
+			this.tbConnectionString.Text = "Data Source=(localdb)\\MSSQLLocalDB; Initial Catalog=master; Integrated Security=T" +
+    "rue;  Persist Security Info=False; Pooling=False;";
+			this.tbConnectionString.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label1.Location = new System.Drawing.Point(8, 24);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(91, 13);
+			this.label1.TabIndex = 4;
+			this.label1.Text = "ConnectionString:";
+			// 
+			// groupBox1
+			// 
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.Controls.Add(this.label1);
+			this.groupBox1.Controls.Add(this.tbConnectionString);
+			this.groupBox1.Controls.Add(this.tbCommandText);
+			this.groupBox1.Controls.Add(this.label2);
+			this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.groupBox1.Location = new System.Drawing.Point(0, 4);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Size = new System.Drawing.Size(668, 180);
+			this.groupBox1.TabIndex = 17;
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = "1) Craft your SQL query:";
+			// 
+			// tbFilepathMask
+			// 
+			this.tbFilepathMask.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbFilepathMask.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.tbFilepathMask.Location = new System.Drawing.Point(24, 39);
+			this.tbFilepathMask.Name = "tbFilepathMask";
+			this.tbFilepathMask.Size = new System.Drawing.Size(496, 20);
+			this.tbFilepathMask.TabIndex = 16;
+			this.tbFilepathMask.Text = "C:\\Temp\\{FileType}\\{FileName}.{FileExt}";
+			this.tbFilepathMask.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
+			// 
+			// label3
+			// 
+			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.label3.AutoSize = true;
+			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label3.Location = new System.Drawing.Point(8, 24);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(131, 13);
+			this.label3.TabIndex = 6;
+			this.label3.Text = "Output file naming pattern:";
+			// 
+			// tbVarBinaryColumn
+			// 
+			this.tbVarBinaryColumn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbVarBinaryColumn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.tbVarBinaryColumn.Location = new System.Drawing.Point(24, 84);
+			this.tbVarBinaryColumn.Name = "tbVarBinaryColumn";
+			this.tbVarBinaryColumn.Size = new System.Drawing.Size(124, 20);
+			this.tbVarBinaryColumn.TabIndex = 18;
+			this.tbVarBinaryColumn.Text = "FileData";
+			this.tbVarBinaryColumn.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
+			// 
+			// label6
+			// 
+			this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.label6.AutoSize = true;
+			this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label6.Location = new System.Drawing.Point(8, 68);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(168, 13);
+			this.label6.TabIndex = 17;
+			this.label6.Text = "File data (varbinary) column name:";
+			// 
+			// groupBox2
+			// 
+			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox2.Controls.Add(this.label6);
+			this.groupBox2.Controls.Add(this.tbVarBinaryColumn);
+			this.groupBox2.Controls.Add(this.label3);
+			this.groupBox2.Controls.Add(this.tbFilepathMask);
+			this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.groupBox2.Location = new System.Drawing.Point(4, 192);
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.Size = new System.Drawing.Size(672, 116);
+			this.groupBox2.TabIndex = 18;
+			this.groupBox2.TabStop = false;
+			this.groupBox2.Text = "2) Choose your output naming pattern:";
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(670, 473);
+			this.Controls.Add(this.groupBox2);
+			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.label4);
-			this.Controls.Add(this.radioBtnName3);
-			this.Controls.Add(this.radioBtnName2);
-			this.Controls.Add(this.radioBtnName1);
-			this.Controls.Add(this.chkBoxNameFromColumn);
 			this.Controls.Add(this.tbOutput);
 			this.Controls.Add(this.btnExecuteQuery);
-			this.Controls.Add(this.label3);
-			this.Controls.Add(this.label2);
-			this.Controls.Add(this.label1);
-			this.Controls.Add(this.btnBrowse);
-			this.Controls.Add(this.tbFolderPath);
-			this.Controls.Add(this.tbCommandText);
-			this.Controls.Add(this.tbConnectionString);
 			this.MinimumSize = new System.Drawing.Size(686, 511);
 			this.Name = "MainForm";
 			this.Text = "SqlFileStream 2 File System";
+			this.groupBox1.ResumeLayout(false);
+			this.groupBox1.PerformLayout();
+			this.groupBox2.ResumeLayout(false);
+			this.groupBox2.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
 		}
 
 		#endregion
-
-		private System.Windows.Forms.TextBox tbConnectionString;
-		private System.Windows.Forms.TextBox tbCommandText;
-		private System.Windows.Forms.TextBox tbFolderPath;
-		private System.Windows.Forms.Button btnBrowse;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Button btnExecuteQuery;
 		private System.Windows.Forms.TextBox tbOutput;
-        private System.Windows.Forms.CheckBox chkBoxNameFromColumn;
-        private System.Windows.Forms.RadioButton radioBtnName1;
-        private System.Windows.Forms.RadioButton radioBtnName2;
-        private System.Windows.Forms.RadioButton radioBtnName3;
 		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.TextBox tbCommandText;
+		private System.Windows.Forms.TextBox tbConnectionString;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.TextBox tbFilepathMask;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.TextBox tbVarBinaryColumn;
+		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.GroupBox groupBox2;
 	}
 }
 

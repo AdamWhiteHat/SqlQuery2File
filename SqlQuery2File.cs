@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Data;
-using System.Data.SqlTypes;
+using System.Threading;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 
@@ -11,125 +10,132 @@ namespace SqlFileClient
 {
 	public static class SqlQuery2File
 	{
-		public static string GenerateFilename(string myFileName, int appendName, bool boolConflict)
+		private static string RemoveWhitespace(string input)
 		{
-			if (myFileName.Contains("/"))
-			{
-				myFileName = myFileName.Substring(myFileName.LastIndexOf("/") + 1);
-			}
-
-			string returnName = "";
-			if (appendName == 1)
-			{
-				returnName = System.Guid.NewGuid().ToString() + "_" + myFileName;
-			}
-			else if (appendName == -1)
-			{
-				returnName = System.Guid.NewGuid().ToString();
-			}
-			else if (appendName == 2 && boolConflict == false)
-			{
-				returnName = myFileName;
-			}
-			else
-			{
-				returnName = myFileName + "_" + System.Guid.NewGuid().ToString();
-			}
-			return returnName;
+			return new string(input.Where(c => !char.IsWhiteSpace(c)).ToArray());
 		}
 
-		public static string GetSqlFile(string connectionString, string commandText, string outDirectory, bool useColumnValueForName, int appendName)
+		private static string StringReplaceColumnIndexTokens(DataTable table, string tokenString)
 		{
-			SqlConnection sqlConnection = null;
+			string result = tokenString;
+			foreach(int col in Enumerable.Range(0, table.Columns.Count))
+			{
+
+				result = result.Replace($"{{{col}}}", table.Columns[col].ColumnName);
+			}
+			return RemoveWhitespace(result).Replace("{","").Replace("}", "");
+		}
+
+		public static string GetSqlFile(string connectionString, string commandText, string filenameMask, string binaryDataColumnName)
+		{
+			DataTable dataTableResult = new DataTable();
 
 			try
 			{
-				sqlConnection = new SqlConnection(connectionString);
-
-				SqlCommand sqlCommand = new SqlCommand();
-				sqlCommand.Connection = sqlConnection;
-				sqlCommand.CommandText = commandText;
-				sqlCommand.CommandTimeout = 0;
-				sqlConnection.Open();
-
-				FileStream fs;
-				BinaryWriter bw;
-
-				int bufferSize = 2000;
-				byte[] outbyte = new byte[bufferSize];
-				long retval;
-				long startIndex = 0;
-
-
-				SqlDataReader reader = sqlCommand.ExecuteReader(CommandBehavior.SequentialAccess);
-				while (reader.Read())
+				using (SqlConnection sqlConnection = new SqlConnection(connectionString))
 				{
-					string fName = "";
-					// Get filename
-					if (useColumnValueForName)
+					using (SqlCommand sqlCommand = new SqlCommand())
 					{
-						object tmpFname = reader.GetValue(0);
-						fName = tmpFname.ToString();
-						if (fName.Length > 200)
+						sqlCommand.Connection = sqlConnection;
+						sqlCommand.CommandText = commandText;
+						sqlCommand.CommandTimeout = 0;
+						sqlConnection.Open();
+
+						// Generally this will throw an exception if there is anything wrong
+						using (SqlDataReader reader = sqlCommand.ExecuteReader(CommandBehavior.SequentialAccess))
 						{
-							fName = "";
+							if (!reader.HasRows)
+							{
+								return "Query failed to return any rows." + Environment.NewLine;
+							}
+							if (reader.FieldCount < 1)
+							{
+								return "Query failed to return any columns." + Environment.NewLine;
+							}
+
+							dataTableResult.Load(reader, LoadOption.OverwriteChanges); // Store SQL Query results in a DataTable class
 						}
 					}
-
-					// Get output path
-					string fPath = Path.Combine(outDirectory, GenerateFilename(fName, appendName, false));
-					// while exists
-					while (File.Exists(fPath) == true)
-					{
-						fPath = Path.Combine(outDirectory, GenerateFilename(fName, appendName, true));
-					}
-
-					// Create a file to write the output to
-					fs = new FileStream(fPath, FileMode.OpenOrCreate, FileAccess.Write);
-					bw = new BinaryWriter(fs);
-
-					// Reset the starting byte for the new BLOB.
-					startIndex = 0;
-
-					// Read the bytes into outbyte[] and retain the number of bytes returned.
-					retval = reader.GetBytes(1, startIndex, outbyte, 0, bufferSize);
-
-					// Continue reading and writing while there are bytes beyond the size of the buffer.
-					while (retval == bufferSize)
-					{
-						bw.Write(outbyte);
-						bw.Flush();
-
-						// Reposition the start index to the end of the last buffer and fill the buffer.
-						startIndex += bufferSize;
-						retval = reader.GetBytes(1, startIndex, outbyte, 0, bufferSize);
-					}
-
-					// Write the remaining buffer.
-					if (retval > 0) // if file size can divide to buffer size
-					{
-						bw.Write(outbyte, 0, (int)retval - 1);
-					}
-					bw.Flush();
-
-					// Close the output file.
-					bw.Close();
-					fs.Close();
 				}
-
-				return $"Success: {outDirectory}";
 			}
-			catch (System.Exception ex)
+			catch (Exception ex)
 			{
 				return ex.ToString();
 			}
-			finally
+						
+
+			string fileDataColumnName = binaryDataColumnName;
+			if (!string.IsNullOrWhiteSpace(fileDataColumnName))
 			{
-				if (sqlConnection != null)
+				fileDataColumnName = StringReplaceColumnIndexTokens(dataTableResult, fileDataColumnName);				
+			}
+
+			try
+			{
+				string resultMessage = $"Query returned '{dataTableResult.Columns.Count}' columns and '{dataTableResult.Rows.Count}' rows." + Environment.NewLine;
+
+				int filesWritten = 0;
+				long bytesWritten = 0;
+
+				// For each row returned by query...
+				foreach (DataRow currentRow in dataTableResult.Rows)
 				{
-					sqlConnection.Close();
-					sqlConnection.Dispose();
+					IEnumerable<DataColumn> dataColumns =
+						dataTableResult.Columns.Cast<DataColumn>()
+						.Where(col =>
+							col.ColumnName != fileDataColumnName
+							&&
+							!currentRow.IsNull(col.Ordinal)
+						);
+
+					// Create a Tuple that holds: <SearchToken,ReplaceValue>
+					IEnumerable<Tuple<string, string>> columnsReplacements =
+						dataColumns.SelectMany(col =>
+						{
+							string replaceValue = currentRow[col].ToString();
+							return new Tuple<string, string>[]
+							{
+								new Tuple<string, string>($"{{{col.Ordinal}}}", replaceValue),
+								new Tuple<string, string>($"{{{col.ColumnName.ToLowerInvariant()}}}", replaceValue)
+							};
+						});
+
+					string filePattern = filenameMask.ToLowerInvariant(); // Case insensitive
+					foreach (Tuple<string, string> tup in columnsReplacements)
+					{
+						// Replace file pattern masks with the values from matching column names
+						filePattern = filePattern.Replace(tup.Item1, tup.Item2);
+					}
+
+					// Returns a unique, non-existent file path
+					string outputFilepath = FilesystemHelper.CollisionFreeFilename(filePattern);
+
+					byte[] fileBytes = currentRow[fileDataColumnName] as byte[]; // Get varbinary file data column as bytes
+					int byteLength = fileBytes.Length;
+
+					File.WriteAllBytes(outputFilepath, fileBytes); // Write bytes out to file
+					fileBytes = new byte[0]; // Clear byte array, as it can be large
+
+					FileInfo writtenFileInfo = new FileInfo(outputFilepath);
+					if (!writtenFileInfo.Exists || writtenFileInfo.Length != byteLength) // Check if file exists, is of expected length
+					{
+						return resultMessage + $"Failed to write the {byteLength} byte file: \"{outputFilepath}\"." + Environment.NewLine + "Aborted." + Environment.NewLine;						
+					}
+
+					filesWritten++; // Increment file count
+					bytesWritten += byteLength; // Increment total bytes written
 				}
+
+				if (filesWritten > 0)
+				{
+					resultMessage += $"Wrote {filesWritten} file(s) ({bytesWritten} bytes) out to disk." + Environment.NewLine;
+				}
+
+				return resultMessage;
+			}
+			catch (Exception ex)
+			{
+				return ex.ToString(); // Display error
 			}
 		}
 	}
