@@ -83,7 +83,7 @@
 			// 
 			this.label2.AutoSize = true;
 			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label2.Location = new System.Drawing.Point(12, 84);
+			this.label2.Location = new System.Drawing.Point(12, 76);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(77, 13);
 			this.label2.TabIndex = 5;
@@ -95,11 +95,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbCommandText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbCommandText.Location = new System.Drawing.Point(24, 100);
+			this.tbCommandText.Location = new System.Drawing.Point(24, 92);
 			this.tbCommandText.Multiline = true;
 			this.tbCommandText.Name = "tbCommandText";
 			this.tbCommandText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbCommandText.Size = new System.Drawing.Size(636, 80);
+			this.tbCommandText.Size = new System.Drawing.Size(636, 112);
 			this.tbCommandText.TabIndex = 1;
 			this.tbCommandText.Text = "SELECT [FileType], [FileName], [FileData], [FileExt]\r\nFROM [FileTable]\r\nWHERE [Fi" +
     "leData] IS NOT NULL";
@@ -114,10 +114,10 @@
 			this.tbConnectionString.Multiline = true;
 			this.tbConnectionString.Name = "tbConnectionString";
 			this.tbConnectionString.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbConnectionString.Size = new System.Drawing.Size(636, 40);
+			this.tbConnectionString.Size = new System.Drawing.Size(636, 32);
 			this.tbConnectionString.TabIndex = 0;
-			this.tbConnectionString.Text = "Data Source=(localdb)\\MSSQLLocalDB; Initial Catalog=master; Integrated Security=T" +
-    "rue;  Persist Security Info=False; Pooling=False;";
+			this.tbConnectionString.Text = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=Tru" +
+    "e;Persist Security Info=False;\r\n999";
 			this.tbConnectionString.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
 			// 
 			// label1
@@ -142,7 +142,7 @@
 			this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.groupBox1.Location = new System.Drawing.Point(0, 4);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(668, 180);
+			this.groupBox1.Size = new System.Drawing.Size(668, 204);
 			this.groupBox1.TabIndex = 17;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "1) Craft your SQL query:";
@@ -154,7 +154,7 @@
 			this.tbFilepathMask.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tbFilepathMask.Location = new System.Drawing.Point(24, 39);
 			this.tbFilepathMask.Name = "tbFilepathMask";
-			this.tbFilepathMask.Size = new System.Drawing.Size(496, 20);
+			this.tbFilepathMask.Size = new System.Drawing.Size(372, 20);
 			this.tbFilepathMask.TabIndex = 16;
 			this.tbFilepathMask.Text = "C:\\Temp\\{FileType}\\{FileName}.{FileExt}";
 			this.tbFilepathMask.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
@@ -166,20 +166,20 @@
 			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label3.Location = new System.Drawing.Point(8, 24);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(131, 13);
+			this.label3.Size = new System.Drawing.Size(75, 13);
 			this.label3.TabIndex = 6;
-			this.label3.Text = "Output file naming pattern:";
+			this.label3.Text = "Save file path:";
 			// 
 			// tbVarBinaryColumn
 			// 
-			this.tbVarBinaryColumn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbVarBinaryColumn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.tbVarBinaryColumn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbVarBinaryColumn.Location = new System.Drawing.Point(24, 84);
+			this.tbVarBinaryColumn.Location = new System.Drawing.Point(24, 80);
 			this.tbVarBinaryColumn.Name = "tbVarBinaryColumn";
 			this.tbVarBinaryColumn.Size = new System.Drawing.Size(124, 20);
 			this.tbVarBinaryColumn.TabIndex = 18;
 			this.tbVarBinaryColumn.Text = "FileData";
+			this.tbVarBinaryColumn.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.tbVarBinaryColumn.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
 			// 
 			// label6
@@ -187,11 +187,11 @@
 			this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label6.AutoSize = true;
 			this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label6.Location = new System.Drawing.Point(8, 68);
+			this.label6.Location = new System.Drawing.Point(8, 64);
 			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(168, 13);
+			this.label6.Size = new System.Drawing.Size(173, 13);
 			this.label6.TabIndex = 17;
-			this.label6.Text = "File data (varbinary) column name:";
+			this.label6.Text = "Column name or index of binary file:";
 			// 
 			// groupBox2
 			// 
@@ -202,9 +202,9 @@
 			this.groupBox2.Controls.Add(this.label3);
 			this.groupBox2.Controls.Add(this.tbFilepathMask);
 			this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox2.Location = new System.Drawing.Point(4, 192);
+			this.groupBox2.Location = new System.Drawing.Point(4, 216);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(672, 116);
+			this.groupBox2.Size = new System.Drawing.Size(672, 100);
 			this.groupBox2.TabIndex = 18;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "2) Choose your output naming pattern:";
@@ -221,7 +221,10 @@
 			this.Controls.Add(this.btnExecuteQuery);
 			this.MinimumSize = new System.Drawing.Size(686, 511);
 			this.Name = "MainForm";
+			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
 			this.Text = "SqlFileStream 2 File System";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+			this.Shown += new System.EventHandler(this.MainForm_Shown);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
 			this.groupBox2.ResumeLayout(false);
