@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Linq;
 using System.Data;
 using System.Threading;
+using System.Data.SqlTypes;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 
@@ -18,12 +20,12 @@ namespace SqlFileClient
 		private static string StringReplaceColumnIndexTokens(DataTable table, string tokenString)
 		{
 			string result = tokenString;
-			foreach(int col in Enumerable.Range(0, table.Columns.Count))
+			foreach (int col in Enumerable.Range(0, table.Columns.Count))
 			{
 
 				result = result.Replace($"{{{col}}}", table.Columns[col].ColumnName);
 			}
-			return RemoveWhitespace(result).Replace("{","").Replace("}", "");
+			return RemoveWhitespace(result).Replace("{", "").Replace("}", "");
 		}
 
 		public static string GetSqlFile(string connectionString, string commandText, string filenameMask, string binaryDataColumnName)
@@ -44,11 +46,15 @@ namespace SqlFileClient
 						// Generally this will throw an exception if there is anything wrong
 						using (SqlDataReader reader = sqlCommand.ExecuteReader(CommandBehavior.SequentialAccess))
 						{
-							if (!reader.HasRows)
+							if(reader == null)
+							{
+								return "Query return a null SqlDataReader? Aborting..." + Environment.NewLine;
+							}
+							else if (!reader.HasRows )
 							{
 								return "Query failed to return any rows." + Environment.NewLine;
 							}
-							if (reader.FieldCount < 1)
+							else if (reader.FieldCount < 1)
 							{
 								return "Query failed to return any columns." + Environment.NewLine;
 							}
@@ -62,12 +68,12 @@ namespace SqlFileClient
 			{
 				return ex.ToString();
 			}
-						
+
 
 			string fileDataColumnName = binaryDataColumnName;
 			if (!string.IsNullOrWhiteSpace(fileDataColumnName))
 			{
-				fileDataColumnName = StringReplaceColumnIndexTokens(dataTableResult, fileDataColumnName);				
+				fileDataColumnName = StringReplaceColumnIndexTokens(dataTableResult, fileDataColumnName);
 			}
 
 			try
@@ -110,16 +116,40 @@ namespace SqlFileClient
 					// Returns a unique, non-existent file path
 					string outputFilepath = FilesystemHelper.CollisionFreeFilename(filePattern);
 
-					byte[] fileBytes = currentRow[fileDataColumnName] as byte[]; // Get varbinary file data column as bytes
-					int byteLength = fileBytes.Length;
+					var dataColumn = dataTableResult.Columns[fileDataColumnName];
+					Type dataType = dataColumn.DataType;
+					string dataTypeString = dataType.ToString();
 
-					File.WriteAllBytes(outputFilepath, fileBytes); // Write bytes out to file
-					fileBytes = new byte[0]; // Clear byte array, as it can be large
+					int byteLength = 0;
+
+					//SqlDbType.Char / SqlDbType.NChar / SqlDbType.VarChar / SqlDbType.NVarChar
+					//SqlDbType.Binary / SqlDbType.VarBinary / SqlDbType.Image
+					//SqlDbType.BigInt/ SqlDbType.Int / SqlDbType.SmallInt / SqlDbType.TinyInt / SqlDbType.Byte
+					//SqlDbType.Real / SqlDbType.Float / SqlDbType.Decimal
+					//SqlDbType.Money / SqlDbType.SmallMoney
+					//SqlDbType.Text / SqlDbType.NText
+					//SqlDbType.Xml
+
+					if (dataType == typeof(byte[]))
+					{
+						byte[] fileBytes = currentRow[fileDataColumnName] as byte[]; // Get varbinary column file data  as bytes
+						byteLength = fileBytes.Length;
+
+						File.WriteAllBytes(outputFilepath, fileBytes); // Write bytes out to file
+						fileBytes = new byte[0]; // Clear byte array, as it can be large
+					}
+					else// if (dataType == typeof(string))
+					{
+						string fileText = currentRow[fileDataColumnName].ToString(); // as string; // Get varchar, nvarchar or string column data  as string						
+						byteLength = Encoding.UTF8.GetByteCount(fileText); // fileText.Length;
+
+						File.WriteAllText(outputFilepath, fileText); // Write text string out to file
+					}
 
 					FileInfo writtenFileInfo = new FileInfo(outputFilepath);
 					if (!writtenFileInfo.Exists || writtenFileInfo.Length != byteLength) // Check if file exists, is of expected length
 					{
-						return resultMessage + $"Failed to write the {byteLength} byte file: \"{outputFilepath}\"." + Environment.NewLine + "Aborted." + Environment.NewLine;						
+						return resultMessage + $"Failed to write the {byteLength} byte file: \"{outputFilepath}\"." + Environment.NewLine + "Aborted." + Environment.NewLine;
 					}
 
 					filesWritten++; // Increment file count

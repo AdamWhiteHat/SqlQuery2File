@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.btnExecuteQuery = new System.Windows.Forms.Button();
 			this.tbOutput = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
@@ -101,8 +102,7 @@
 			this.tbCommandText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.tbCommandText.Size = new System.Drawing.Size(636, 112);
 			this.tbCommandText.TabIndex = 1;
-			this.tbCommandText.Text = "SELECT [FileType], [FileName], [FileData], [FileExt]\r\nFROM [FileTable]\r\nWHERE [Fi" +
-    "leData] IS NOT NULL";
+			this.tbCommandText.Text = resources.GetString("tbCommandText.Text");
 			this.tbCommandText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
 			// 
 			// tbConnectionString
@@ -178,7 +178,7 @@
 			this.tbVarBinaryColumn.Name = "tbVarBinaryColumn";
 			this.tbVarBinaryColumn.Size = new System.Drawing.Size(124, 20);
 			this.tbVarBinaryColumn.TabIndex = 18;
-			this.tbVarBinaryColumn.Text = "FileData";
+			this.tbVarBinaryColumn.Text = "FileData_VARBINARY";
 			this.tbVarBinaryColumn.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.tbVarBinaryColumn.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
 			// 
