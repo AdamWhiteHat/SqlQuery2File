@@ -117,4 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="tbCommandText.Text" xml:space="preserve">
+    <value>SELECT 
+   [FileType], [FileName], [FileExt],
+   [FileData_VARBINARY],
+   [FileData_NVARCHAR], [FileData_VARCHAR], [FileData_CHAR], [FileData_TEXT], [FileData_NTEXT], [FileData_NCHAR]
+
+FROM [FileTable]</value>
+  </data>
 </root>

@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.btnExecuteQuery = new System.Windows.Forms.Button();
 			this.tbOutput = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
@@ -40,10 +41,9 @@
 			this.label3 = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.numFileDataIndex = new System.Windows.Forms.NumericUpDown();
+			this.tbFileDataColumn = new System.Windows.Forms.TextBox();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numFileDataIndex)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btnExecuteQuery
@@ -102,7 +102,8 @@
 			this.tbCommandText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.tbCommandText.Size = new System.Drawing.Size(636, 112);
 			this.tbCommandText.TabIndex = 1;
-			this.tbCommandText.Text = "SELECT [FileType], [FileName], [FileExt], [FileData_VARBINARY]\r\nFROM [FileTable]";
+			this.tbCommandText.Text = resources.GetString("tbCommandText.Text");
+			this.tbCommandText.TextChanged += new System.EventHandler(this.tbCommandText_TextChanged);
 			this.tbCommandText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
 			// 
 			// tbConnectionString
@@ -156,7 +157,7 @@
 			this.tbFilepathMask.Name = "tbFilepathMask";
 			this.tbFilepathMask.Size = new System.Drawing.Size(372, 20);
 			this.tbFilepathMask.TabIndex = 16;
-			this.tbFilepathMask.Text = "C:\\Temp\\{0}\\{1}.{2}";
+			this.tbFilepathMask.Text = "C:\\Temp\\{FileType}\\{FileName}.{FileExt}";
 			this.tbFilepathMask.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
 			// 
 			// label3
@@ -185,7 +186,7 @@
 			// 
 			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBox2.Controls.Add(this.numFileDataIndex);
+			this.groupBox2.Controls.Add(this.tbFileDataColumn);
 			this.groupBox2.Controls.Add(this.label6);
 			this.groupBox2.Controls.Add(this.label3);
 			this.groupBox2.Controls.Add(this.tbFilepathMask);
@@ -197,23 +198,16 @@
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "2) Choose your output naming pattern:";
 			// 
-			// numFileDataIndex
+			// tbFileDataColumn
 			// 
-			this.numFileDataIndex.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.numFileDataIndex.Location = new System.Drawing.Point(24, 80);
-			this.numFileDataIndex.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-			this.numFileDataIndex.Name = "numFileDataIndex";
-			this.numFileDataIndex.Size = new System.Drawing.Size(80, 20);
-			this.numFileDataIndex.TabIndex = 19;
-			this.numFileDataIndex.Value = new decimal(new int[] {
-            3,
-            0,
-            0,
-            0});
+			this.tbFileDataColumn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbFileDataColumn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.tbFileDataColumn.Location = new System.Drawing.Point(24, 80);
+			this.tbFileDataColumn.Name = "tbFileDataColumn";
+			this.tbFileDataColumn.Size = new System.Drawing.Size(216, 20);
+			this.tbFileDataColumn.TabIndex = 20;
+			this.tbFileDataColumn.Text = "FileData_VARBINARY";
 			// 
 			// MainForm
 			// 
@@ -235,7 +229,6 @@
 			this.groupBox1.PerformLayout();
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numFileDataIndex)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -254,7 +247,7 @@
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.GroupBox groupBox2;
-		private System.Windows.Forms.NumericUpDown numFileDataIndex;
+		private System.Windows.Forms.TextBox tbFileDataColumn;
 	}
 }
 

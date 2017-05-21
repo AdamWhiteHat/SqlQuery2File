@@ -1,16 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Xml;
 using System.Text;
 using System.Linq;
 using System.Data;
-using System.Data.Sql;
-using System.Data.Linq;
-using System.Data.Linq.Mapping;
-using System.Data.Linq.SqlClient;
-using System.Data.Linq.SqlClient.Implementation;
-using System.Threading;
-using System.Data.SqlTypes;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 
@@ -18,41 +11,57 @@ namespace SqlFileClient
 {
 	public static class SqlQuery2File
 	{
-		private static string RemoveWhitespace(string input)
+		private static string FileDataColumnArgumentErrorMessage = "FAILED: Unable to parse the 'File Data' column specifier as a index or a column name." + Environment.NewLine + "Value passed: '{0}'.";
+		private static string ArgumentMissingErrorMessage = "Parameter '{0}' must not be null, empty or whitespace.";
+		public static string GetSqlFile(string connectionString, string commandText, string filenameMask, string fileDataColumn)
 		{
-			return new string(input.Where(c => !char.IsWhiteSpace(c)).ToArray());
-		}
-
-		private static string StringReplaceColumnIndexTokens(DataTable table, string tokenString)
-		{
-			string result = tokenString;
-			foreach (int col in Enumerable.Range(0, table.Columns.Count))
+			if (string.IsNullOrWhiteSpace(connectionString))
 			{
-				result = result.Replace($"{{{col}}}", table.Columns[col].ColumnName);
+				return string.Format(ArgumentMissingErrorMessage, "ConnectionString");
 			}
-			return RemoveWhitespace(result).Replace("{", "").Replace("}", "");
-		}
-
-		private static string ReplaceTokens(string pattern, List<string> tokenValues)
-		{
-			int tokenIndex = 0;
-			StringBuilder result = new StringBuilder(pattern);
-			foreach (string replaceValue in tokenValues)
+			else if (string.IsNullOrWhiteSpace(commandText))
 			{
-				//result = // will save an assignment step if we can avoid this
-				result.Replace($"{{{tokenIndex}}}", replaceValue);
-				tokenIndex++;
+				return string.Format(ArgumentMissingErrorMessage, "Command Text");
 			}
-			return result.ToString();
-		}
+			else if (string.IsNullOrWhiteSpace(filenameMask))
+			{
+				return string.Format(ArgumentMissingErrorMessage, "Filename Mask");
+			}
+			else if (string.IsNullOrWhiteSpace(fileDataColumn))
+			{
+				return string.Format(ArgumentMissingErrorMessage, "File Data Column");
+			}
 
-		public static string GetSqlFile(string connectionString, string commandText, string filenameMask, int binaryDataColumnIndex)
-		{
 			int filesWritten = 0;
+			int fileDataColumnIndex = -1;
+			string fileDataColumnName = string.Empty;
 			List<string> failedFiles = new List<string>();
+			ColumnSchemaCollection rowSchema;
 
 			try
 			{
+				rowSchema = ColumnSchemaCollection.GetTableSchema(commandText, connectionString);
+
+				string columnIdentifier = fileDataColumn.Replace("{", "").Replace("}", "").Trim();
+
+				fileDataColumnIndex = -1;
+
+				if (columnIdentifier.All(c => char.IsDigit(c)))
+				{
+					fileDataColumnIndex = int.Parse(columnIdentifier);
+				}
+				else
+				{
+					ColumnSchema dataColumnInfo = rowSchema[columnIdentifier];
+
+					if (dataColumnInfo == ColumnSchema.Empty)
+					{
+						return string.Format(FileDataColumnArgumentErrorMessage, columnIdentifier);
+					}
+
+					fileDataColumnIndex = dataColumnInfo.Ordinal;
+				}
+
 				using (SqlConnection sqlConnection = new SqlConnection(connectionString))
 				{
 					using (SqlCommand sqlCommand = new SqlCommand())
@@ -67,17 +76,18 @@ namespace SqlFileClient
 						{
 							if (dataReader == null)
 							{
-								return "SqlCommand.ExecuteReader() returned a null SqlDataReader? That should not have been possible. Aborting..." + Environment.NewLine;
+								return "SqlCommand.ExecuteReader() returned a null SqlDataReader? That should not have been possible. Aborting...";
 							}
 							else if (!dataReader.HasRows)
 							{
-								return "Query failed to return any rows." + Environment.NewLine;
+								return "Query failed to return any rows.";
 							}
 							else if (dataReader.FieldCount < 1)
 							{
-								return "Query failed to return any columns." + Environment.NewLine;
+								return "Query failed to return any columns.";
 							}
 
+							int rowCount = 1;
 							while (dataReader.Read()) // Gets next ROW
 							{
 								object[] rawColumns = new object[dataReader.FieldCount];
@@ -86,15 +96,15 @@ namespace SqlFileClient
 								List<object> cells = rawColumns.ToList();
 								rawColumns = null; // Tidy up
 
-								object fileData = cells[binaryDataColumnIndex]; // Save the column containing the file data
-								cells.RemoveAt(binaryDataColumnIndex); // Remove the file data column from the list
-								cells.Insert(binaryDataColumnIndex, (object)string.Empty); // Re-add the column  with empty string at the same position, so columns after that position are not shifted an position index of -1
+								object fileData = cells[fileDataColumnIndex]; // Save the column containing the file data
+								cells.RemoveAt(fileDataColumnIndex); // Remove the file data column from the list
+								cells.Insert(fileDataColumnIndex, (object)string.Empty); // Re-add the column  with empty string at the same position, so columns after that position are not shifted an position index of -1
 
-								List<string> columnsAsStrings = cells.Select(obj => DBNull.Value != obj ? ((string)obj) : string.Empty).ToList(); // Convert rest of columns to strings								
+								List<string> columnValueStrings = cells.Select(obj => DBNull.Value != obj ? obj.ToString() : string.Empty).ToList(); // Convert rest of columns to strings
 								cells.Clear(); // Tidy up
 
-								string customFilename = ReplaceTokens(filenameMask, columnsAsStrings);
-								columnsAsStrings.Clear(); // Tidy up
+								string customFilename = ColumnSchemaCollection.ReplaceTokens(filenameMask, rowSchema, columnValueStrings);
+								columnValueStrings.Clear(); // Tidy up
 
 								string outFilename = FilesystemHelper.CollisionFreeFilename(customFilename);
 
@@ -110,15 +120,10 @@ namespace SqlFileClient
 								{
 									File.WriteAllText(outFilename, new string((char[])fileData));
 								}
-								//else if (fileData is XElement)
-								//{
-								//	XElement xml = (XElement)fileData;
-								//	xml.Save(outFilename);
-								//	xml = null;
-								//}
-								else // What about , xml, sql_variant
+								else // What about xml, sql_variant, others?
 								{
-									return $"Unexpected data type encountered while reading cells from SQL query results: \"{fileData.GetType()}\".";
+									return $"Unexpected data type encountered while reading cells from SQL query results: '{fileData.GetType()}'."
+										+ $"FAILED AT ROW # {rowCount}";
 								}
 
 								fileData = null; // Tidy up
@@ -128,6 +133,7 @@ namespace SqlFileClient
 									failedFiles.Add(outFilename);
 								}
 
+								rowCount++;
 								filesWritten++;
 							}
 						} /* END: using(SqlDataReader) { ... */
@@ -139,19 +145,21 @@ namespace SqlFileClient
 				return ex.ToString();
 			}
 
-			string resultMessage = string.Empty;
-
-
-
-
-
+			StringBuilder resultMessage = new StringBuilder();
 
 			if (filesWritten > 0)
 			{
-				resultMessage += $"Finished! \nWrote a total of {filesWritten} file(s) out to disk.";
+				resultMessage.AppendLine($"Finished!");
+				resultMessage.AppendLine($"Wrote a total of {filesWritten} file(s) out to disk.");
 			}
 
-			return resultMessage;
+			if (failedFiles.Any())
+			{
+				resultMessage.AppendLine($"Failed to write some files:");
+				resultMessage.AppendLine(string.Join(Environment.NewLine + "\tFAILED:\t ", failedFiles));
+			}
+
+			return resultMessage.ToString();
 		}
 	}
 }

@@ -1,9 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Collections.Generic;
 
 namespace SqlFileClient
 {
@@ -59,7 +55,7 @@ namespace SqlFileClient
 
 
 		private class Counter
-		{			
+		{
 			private int _count; //public int Count { get { return _count; } }
 
 			public Counter(int startValue = 1) { _count = startValue; }

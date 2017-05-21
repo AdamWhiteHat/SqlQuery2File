@@ -1,19 +1,10 @@
 ﻿using System;
 using System.IO;
-using System.Xml;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Xml.Linq;
 using System.Threading;
 using System.Collections;
 using System.Windows.Forms;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters;
 
 namespace SqlFileClient
 {
@@ -48,15 +39,16 @@ namespace SqlFileClient
 			string connectionString = tbConnectionString.Text;
 			string commandText = tbCommandText.Text;
 			string outputFilepath = tbFilepathMask.Text;
-			//string FiledataColumnName = tbVarBinaryColumn.Text;
-			int fileData_Index = (int)numFileDataIndex.Value;
+			string filedataColumnName = tbFileDataColumn.Text;
+			//int fileData_Index = (int)numFileDataIndex.Value;
+
 
 			SetControlsEnabled(false);
 
 			// Launch long running SQL query on a different thread than the UI thread
 			new Thread(() =>
 			{
-				string result = SqlQuery2File.GetSqlFile(connectionString, commandText, outputFilepath, fileData_Index);
+				string result = SqlQuery2File.GetSqlFile(connectionString, commandText, outputFilepath, filedataColumnName);
 				SetControlsEnabled(true, result);
 			}
 			).Start();
@@ -94,9 +86,9 @@ namespace SqlFileClient
 				string connectionString = xRoot.Element("ConnectionString").Value;
 				string commandText = xRoot.Element("CommandText").Value;
 				string outputFilepath = xRoot.Element("OutputFilepath").Value;
-				string dataColumnIndex = xRoot.Element("DataColumnIndex").Value.Trim();
+				string fileDataColumn = xRoot.Element("FileDataColumn").Value.Trim();
 
-				if(!string.IsNullOrWhiteSpace(commandText))
+				if (!string.IsNullOrWhiteSpace(commandText))
 				{
 					commandText = commandText.Replace("\n", Environment.NewLine);
 				}
@@ -104,16 +96,7 @@ namespace SqlFileClient
 				tbConnectionString.Text = connectionString;
 				tbCommandText.Text = commandText;
 				tbFilepathMask.Text = outputFilepath;
-
-				int fileDataIndex = 0;
-				if (int.TryParse(dataColumnIndex, out fileDataIndex))
-				{
-					numFileDataIndex.Value = fileDataIndex;
-				}
-				else
-				{
-					numFileDataIndex.Value = 0;
-				}
+				tbFileDataColumn.Text = fileDataColumn;
 			}
 		}
 
@@ -122,14 +105,14 @@ namespace SqlFileClient
 			string connectionString = tbConnectionString.Text;
 			string commandText = tbCommandText.Text;
 			string outputFilepath = tbFilepathMask.Text;
-			string dataColumnIndex = numFileDataIndex.Value.ToString();
+			string fileDataColumn = tbFileDataColumn.Text;
 
 			XElement xRoot =
 				new XElement("root",
 					new XElement("ConnectionString", connectionString),
 					new XElement("CommandText", commandText),
 					new XElement("OutputFilepath", outputFilepath),
-					new XElement("DataColumnIndex", dataColumnIndex)
+					new XElement("FileDataColumn", fileDataColumn)
 				);
 
 			XDocument xDoc = new XDocument();
@@ -137,6 +120,11 @@ namespace SqlFileClient
 
 			//xDoc.Save(lastValuesFilenames, SaveOptions.DisableFormatting);
 			File.WriteAllText(lastValuesFilenames, xDoc.ToString(SaveOptions.DisableFormatting));
+		}
+
+		private void tbCommandText_TextChanged(object sender, EventArgs e)
+		{
+
 		}
 	}
 }
