@@ -52,7 +52,7 @@ namespace SqlFileClient
 			foreach (ColumnSchema column in columnSchemas)
 			{
 				result.Replace($"{{{column.Ordinal}}}", tokenValues[column.Ordinal]);
-				result.Replace($"{{{columnSchemas[column.Ordinal]}}}", tokenValues[column.Ordinal]);
+				result.Replace($"{{{column.Name}}}", tokenValues[column.Ordinal]);
 			}
 			return result.ToString();
 		}
