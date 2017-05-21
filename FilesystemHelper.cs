@@ -11,73 +11,65 @@ namespace SqlFileClient
 	{
 		public static string CollisionFreeFilename(string preferedPathAndFilename)
 		{
-			string inputFullFilePath = preferedPathAndFilename;
+			if (string.IsNullOrWhiteSpace(preferedPathAndFilename))
+			{
+				return // Return  Default, GUID-based filename
+					Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+						Path.ChangeExtension(Guid.NewGuid().ToString(), "file") // "00000000-0000-0000-0000-000000000000.file"
+					);
+			}
 
-			string inFilename = Path.GetFileNameWithoutExtension(inputFullFilePath);
-			string inExtension = Path.GetExtension(inputFullFilePath);
-			string inPath = Path.GetDirectoryName(inputFullFilePath);
+			string inPath = Path.GetDirectoryName(preferedPathAndFilename);
 
 			// Create directory tree if not exists
-			DirectoryInfo dirInfo = new DirectoryInfo(inPath);
-			if (!dirInfo.Exists)
+			if (!Directory.Exists(inPath))
 			{
-				dirInfo = Directory.CreateDirectory(inPath);
-			}
-			inPath = dirInfo.FullName;
-
-			// Default, GUID-based filename
-			string result = inputFullFilePath;
-			if (string.IsNullOrWhiteSpace(inputFullFilePath))
-			{
-				inFilename = Guid.NewGuid().ToString(); // "00000000-0000-0000-0000-000000000000"
-				result = Path.ChangeExtension(inFilename, "file"); // "00000000-0000-0000-0000-000000000000.file"
-				result = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, result); // "C:\Path\00000000-0000-0000-0000-000000000000.file"		
+				Directory.CreateDirectory(inPath);
+				return preferedPathAndFilename; // If the directory didn't exist, then neither can have the file; return immediately.
 			}
 
-			while (File.Exists(result))
+			// Detect if there is a filename collision
+			if (!File.Exists(preferedPathAndFilename))
+			{
+				return preferedPathAndFilename; // Return immediately if there is no collision
+			}
+
+			// else ... Append a count to the filename if it already exists, like: filename__001.ext
+
+			string result = preferedPathAndFilename;
+			string inFilename = Path.GetFileNameWithoutExtension(result);
+			string inExtension = Path.GetExtension(result);
+
+			// Actually, if we don't reset the counter, it will be more performant for repeated collisions of the same file,
+			// however for one or a few collisions per file, the number appended will be stratified across all files causing a collision.
+			// counter.Reset() 
+
+			do // do ... while instead of while because we already know there is a collision before first iteration
 			{
 				result = $"{inFilename}__({counter})"; // "Filename__(001)"
 				result = Path.ChangeExtension(result, inExtension); // "Filename__(001).ext"
 				result = Path.Combine(inPath, result);  // "C:\Path\Filename__(001).ext"
 			}
+			while (File.Exists(result)); // in case we have already done this before. deja vu
 
 			return result;
 		}
 
 		private static Counter counter = new Counter();
+
+
 		private class Counter
-		{
-			public Counter(int startValue = 1)
-			{
-				counter = startValue;
-			}
+		{			
+			private int _count; //public int Count { get { return _count; } }
 
-			private int counter;
-			private static string counterFormatString = "{0:000}";
+			public Counter(int startValue = 1) { _count = startValue; }
 
+			//public void Reset() { _count = 1; }
 			public override string ToString()
 			{
-				return string.Format(counterFormatString, counter++);
+				return string.Format(counterFormatString, _count++);
 			}
+			private static string counterFormatString = "{0:000}";
 		}
-
-		/*
-		private static string lastDirectory = "C:\\Temp";
-		public static string BrowseForFolder()
-		{
-			string result = "";
-			using (FolderBrowserDialog browseDialog = new FolderBrowserDialog())
-			{
-				browseDialog.ShowNewFolderButton = true;
-				browseDialog.SelectedPath = lastDirectory;
-				if (browseDialog.ShowDialog() == DialogResult.OK)
-				{
-					lastDirectory = browseDialog.SelectedPath;
-					result = browseDialog.SelectedPath;
-				}
-			}
-			return result;
-		}
-		*/
 	}
 }
