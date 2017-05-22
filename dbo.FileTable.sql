@@ -31,7 +31,7 @@ CREATE TABLE [dbo].[FileTable] (
 
 INSERT INTO [dbo].[FileTable] 
 ([FileId], [FileData_VARBINARY], [FileType], [FileExt], [FileName], [FileFolder], [FileData_NVARCHAR], [FileData_VARCHAR], [FileData_CHAR], [FileData_TEXT], [FileData_NTEXT], [FileData_NCHAR])
- VALUES (0,  CAST('A0FACBB5851C1EF1830722' AS VARBINARY (MAX)), N'SpreadSheet', N'XLS', N'1040EZ_RAK', N'Spreads', N'AB23F990BD', N'E09FF', N'AAAB008', N'00100012AB', N'7891A0B', N'911C7')
+ VALUES (0,  CAST(NULL AS VARBINARY (MAX)), N'SpreadSheet', N'XLS', N'1040EZ_RAK', N'Spreads', N'AB23F990BD', NULL, N'AAAB008', N'00100012AB', N'7891A0B', N'911C7')
 
 INSERT INTO [dbo].[FileTable] 
 ([FileId], [FileData_VARBINARY], [FileType], [FileExt], [FileName], [FileFolder], [FileData_NVARCHAR], [FileData_VARCHAR], [FileData_CHAR], [FileData_TEXT], [FileData_NTEXT], [FileData_NCHAR]) 

@@ -120,6 +120,10 @@ namespace SqlFileClient
 								{
 									File.WriteAllText(outFilename, new string((char[])fileData));
 								}
+								else if (DBNull.Value == fileData)
+								{
+									continue;
+								}
 								else // What about xml, sql_variant, others?
 								{
 									return $"Unexpected data type encountered while reading cells from SQL query results: '{fileData.GetType()}'."

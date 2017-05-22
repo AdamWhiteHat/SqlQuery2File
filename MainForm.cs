@@ -14,6 +14,15 @@ namespace SqlFileClient
 		{
 			InitializeComponent();
 		}
+		private void MainForm_Shown(object sender, EventArgs e)
+		{
+			ReadTextboxSettings();
+		}
+
+		private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			WriteTextboxSetting();
+		}
 
 		private void btnExecuteQuery_Click(object sender, EventArgs e)
 		{
@@ -41,9 +50,10 @@ namespace SqlFileClient
 			string outputFilepath = tbFilepathMask.Text;
 			string filedataColumnName = tbFileDataColumn.Text;
 			//int fileData_Index = (int)numFileDataIndex.Value;
-
-
+			
 			SetControlsEnabled(false);
+
+			WriteTextboxSetting();
 
 			// Launch long running SQL query on a different thread than the UI thread
 			new Thread(() =>
@@ -74,7 +84,7 @@ namespace SqlFileClient
 
 		private static string lastValuesFilenames = "lastValues.save";
 
-		private void MainForm_Shown(object sender, EventArgs e)
+		private void ReadTextboxSettings()
 		{
 			if (File.Exists(lastValuesFilenames))
 			{
@@ -100,7 +110,7 @@ namespace SqlFileClient
 			}
 		}
 
-		private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+		private void WriteTextboxSetting()
 		{
 			string connectionString = tbConnectionString.Text;
 			string commandText = tbCommandText.Text;
@@ -120,11 +130,6 @@ namespace SqlFileClient
 
 			//xDoc.Save(lastValuesFilenames, SaveOptions.DisableFormatting);
 			File.WriteAllText(lastValuesFilenames, xDoc.ToString(SaveOptions.DisableFormatting));
-		}
-
-		private void tbCommandText_TextChanged(object sender, EventArgs e)
-		{
-
 		}
 	}
 }

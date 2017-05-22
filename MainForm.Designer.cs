@@ -59,8 +59,8 @@
 			// 
 			// tbOutput
 			// 
-			this.tbOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.tbOutput.Location = new System.Drawing.Point(4, 364);
 			this.tbOutput.Multiline = true;
 			this.tbOutput.Name = "tbOutput";
@@ -92,9 +92,9 @@
 			// 
 			// tbCommandText
 			// 
-			this.tbCommandText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbCommandText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.tbCommandText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tbCommandText.Location = new System.Drawing.Point(24, 92);
 			this.tbCommandText.Multiline = true;
@@ -103,13 +103,12 @@
 			this.tbCommandText.Size = new System.Drawing.Size(636, 112);
 			this.tbCommandText.TabIndex = 1;
 			this.tbCommandText.Text = resources.GetString("tbCommandText.Text");
-			this.tbCommandText.TextChanged += new System.EventHandler(this.tbCommandText_TextChanged);
 			this.tbCommandText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
 			// 
 			// tbConnectionString
 			// 
-			this.tbConnectionString.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbConnectionString.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.tbConnectionString.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tbConnectionString.Location = new System.Drawing.Point(24, 40);
 			this.tbConnectionString.Multiline = true;
@@ -118,7 +117,7 @@
 			this.tbConnectionString.Size = new System.Drawing.Size(636, 32);
 			this.tbConnectionString.TabIndex = 0;
 			this.tbConnectionString.Text = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=Tru" +
-    "e;Persist Security Info=False;\r\n";
+	"e;Persist Security Info=False;\r\n";
 			this.tbConnectionString.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textbox_KeyUp);
 			// 
 			// label1
@@ -133,9 +132,9 @@
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox1.Controls.Add(this.label1);
 			this.groupBox1.Controls.Add(this.tbConnectionString);
 			this.groupBox1.Controls.Add(this.tbCommandText);
@@ -150,8 +149,8 @@
 			// 
 			// tbFilepathMask
 			// 
-			this.tbFilepathMask.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbFilepathMask.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.tbFilepathMask.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tbFilepathMask.Location = new System.Drawing.Point(24, 39);
 			this.tbFilepathMask.Name = "tbFilepathMask";
@@ -184,8 +183,8 @@
 			// 
 			// groupBox2
 			// 
-			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox2.Controls.Add(this.tbFileDataColumn);
 			this.groupBox2.Controls.Add(this.label6);
 			this.groupBox2.Controls.Add(this.label3);
@@ -200,8 +199,8 @@
 			// 
 			// tbFileDataColumn
 			// 
-			this.tbFileDataColumn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbFileDataColumn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.tbFileDataColumn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tbFileDataColumn.Location = new System.Drawing.Point(24, 80);
 			this.tbFileDataColumn.Name = "tbFileDataColumn";
