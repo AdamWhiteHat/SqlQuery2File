@@ -10,10 +10,18 @@ namespace SqlFileClient
 {
 	public partial class MainForm : Form
 	{
+		private bool isRunning;
+		private CancellationTokenSource cancellationTokenSource;
+		private static string lastValuesFilenames = "lastValues.save";
+
 		public MainForm()
 		{
 			InitializeComponent();
+
+			isRunning = false;
+			cancellationTokenSource = new CancellationTokenSource();
 		}
+
 		private void MainForm_Shown(object sender, EventArgs e)
 		{
 			ReadTextboxSettings();
@@ -37,7 +45,7 @@ namespace SqlFileClient
 			{
 				eventTextBox.SelectAll();
 			}
-			else if (e.KeyCode == Keys.F5 && btnExecuteQuery.Enabled)
+			else if (e.KeyCode == Keys.F5 && !isRunning)
 			{
 				ExecuteQuery();
 			}
@@ -45,23 +53,35 @@ namespace SqlFileClient
 
 		private void ExecuteQuery()
 		{
-			string connectionString = tbConnectionString.Text;
-			string commandText = tbCommandText.Text;
-			string outputFilepath = tbFilepathMask.Text;
-			string filedataColumnName = tbFileDataColumn.Text;
-			//int fileData_Index = (int)numFileDataIndex.Value;
-			
-			SetControlsEnabled(false);
-
-			WriteTextboxSetting();
-
-			// Launch long running SQL query on a different thread than the UI thread
-			new Thread(() =>
+			if (!isRunning)
 			{
-				string result = SqlQuery2File.GetSqlFile(connectionString, commandText, outputFilepath, filedataColumnName);
-				SetControlsEnabled(true, result);
+				isRunning = true;
+				SetControlsEnabled(false);
+				cancellationTokenSource = new CancellationTokenSource();
+				CancellationToken cancelToken = cancellationTokenSource.Token;
+
+				string connectionString = tbConnectionString.Text;
+				string commandText = tbCommandText.Text;
+				string outputFilepath = tbFilepathMask.Text;
+				string filedataColumnName = tbFileDataColumn.Text;
+				//int fileData_Index = (int)numFileDataIndex.Value;				
+
+				WriteTextboxSetting();
+
+				// Launch long running SQL query on a different thread than the UI thread
+				new Thread(() =>
+				{
+					string result = SqlQuery2File.GetSqlFile(connectionString, commandText, outputFilepath, filedataColumnName, cancelToken);
+					SetControlsEnabled(true, result);
+				}
+				).Start();
 			}
-			).Start();
+			else
+			{
+				cancellationTokenSource.Cancel();
+				SetControlsEnabled(true);
+				isRunning = false;
+			}
 		}
 
 		private void SetControlsEnabled(bool enabled, string outputText = "")
@@ -74,15 +94,22 @@ namespace SqlFileClient
 			{
 				groupBox1.Enabled = enabled;
 				groupBox2.Enabled = enabled;
-				btnExecuteQuery.Enabled = enabled;
+
+				if (enabled)
+				{
+					btnExecuteQuery.Text = "Execute SQL Command (F5)";
+				}
+				else
+				{
+					btnExecuteQuery.Text = "Cancel";
+				}
+
 				if (!string.IsNullOrWhiteSpace(outputText))
 				{
 					tbOutput.Text = outputText;
 				}
 			}
 		}
-
-		private static string lastValuesFilenames = "lastValues.save";
 
 		private void ReadTextboxSettings()
 		{

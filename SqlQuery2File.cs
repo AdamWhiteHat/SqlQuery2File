@@ -6,14 +6,16 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace SqlFileClient
 {
 	public static class SqlQuery2File
 	{
+		private static string OperationCanceledMessage = "The operation was canceled by the user.";
 		private static string FileDataColumnArgumentErrorMessage = "FAILED: Unable to parse the 'File Data' column specifier as a index or a column name." + Environment.NewLine + "Value passed: '{0}'.";
 		private static string ArgumentMissingErrorMessage = "Parameter '{0}' must not be null, empty or whitespace.";
-		public static string GetSqlFile(string connectionString, string commandText, string filenameMask, string fileDataColumn)
+		public static string GetSqlFile(string connectionString, string commandText, string filenameMask, string fileDataColumn, CancellationToken cancellationToken)
 		{
 			if (string.IsNullOrWhiteSpace(connectionString))
 			{
@@ -38,6 +40,8 @@ namespace SqlFileClient
 			List<string> failedFiles = new List<string>();
 			ColumnSchemaCollection rowSchema;
 
+			CancellationToken cancelToken = cancellationToken;
+
 			try
 			{
 				rowSchema = ColumnSchemaCollection.GetTableSchema(commandText, connectionString);
@@ -60,6 +64,11 @@ namespace SqlFileClient
 					}
 
 					fileDataColumnIndex = dataColumnInfo.Ordinal;
+				}
+
+				if (cancellationToken.IsCancellationRequested)
+				{
+					return OperationCanceledMessage;
 				}
 
 				using (SqlConnection sqlConnection = new SqlConnection(connectionString))
@@ -90,6 +99,11 @@ namespace SqlFileClient
 							int rowCount = 1;
 							while (dataReader.Read()) // Gets next ROW
 							{
+								if (cancellationToken.IsCancellationRequested)
+								{
+									break;
+								}
+
 								object[] rawColumns = new object[dataReader.FieldCount];
 								int colCount = dataReader.GetValues(rawColumns);
 
@@ -151,9 +165,17 @@ namespace SqlFileClient
 
 			StringBuilder resultMessage = new StringBuilder();
 
-			if (filesWritten > 0)
+			if (cancellationToken.IsCancellationRequested)
+			{
+				resultMessage.AppendLine(OperationCanceledMessage);
+			}
+			else
 			{
 				resultMessage.AppendLine($"Finished!");
+			}
+
+			if (filesWritten > 0)
+			{
 				resultMessage.AppendLine($"Wrote a total of {filesWritten} file(s) out to disk.");
 			}
 
