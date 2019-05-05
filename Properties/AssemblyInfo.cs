@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SqlQuery2File")]
-[assembly: AssemblyCopyright("github.com/AdamRakaska/SqlQuery2File")]
+[assembly: AssemblyCopyright("github.com/AdamWhiteHat/SqlQuery2File")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
